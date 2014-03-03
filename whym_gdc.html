@@ -1,0 +1,94 @@
+<link rel="stylesheet" type="text/css" href="c3.css">
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+<body>
+<script src="jquery-1.9.1.js"></script>
+<script src="d3.v3.min.js" charset="utf-8"></script>
+<script src="c3.min.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+  $(function(){
+    function convertCounts(counts) {
+      var nums = {};
+      $.each(counts, function(days, value) {
+        nums[days] = value[0].userdailycontribs.timeFrameEdits;
+      });
+      var ret = [];
+      var last = 0;
+      Object.keys(nums).sort(function(a,b){return a-b}).forEach(function(x){
+        ret.push(nums[x] - last);
+        last = nums[x];
+      });
+      return ret.reverse();
+    }
+
+    function datapoints(site, user, days, num, callback) {
+      var ret = {};
+      var s = 0;
+      var gets = [];
+      var qs = [];
+      while ( s < days * num ) {
+        s += days;
+        qs.push(s);
+      }
+      qs.forEach(function(d){
+        gets.push($.getJSON(
+          site + '?format=json&action=userdailycontribs&user='+ user +'&daysago='+ d +'&callback=?',
+          function(data, textStatus, jqXHR) {
+            ret[d] = [data, textStatus, jqXHR];
+          }
+        ));
+      });
+      $.when.apply($, gets).then(function() {
+        callback(ret);
+      }, function(){ alert("fail!" + JSON.stringify(ret)); });
+    }
+    
+
+    var sites = {
+      commons: 'http://commons.wikimedia.org/w/api.php',
+      meta: 'http://meta.wikimedia.org/w/api.php',
+      wikidata: 'http://www.wikidata.org/w/api.php',
+      mw: 'http://www.mediawiki.org/w/api.php',
+      // jawiki: 'http://ja.wikipedia.org/w/api.php',
+      // jawikt: 'http://ja.wiktionary.org/w/api.php',
+      // enwikt: 'http://en.wiktionary.org/w/api.php',
+      // enwiki: 'http://en.wikipedia.org/w/api.php',
+    };
+    var chart = c3.generate({
+      bindto: '#chart',
+
+      data: {
+        x: 'date',
+        x_format: '%Y-%m-%d',
+        columns: [
+          ['date', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
+        ]
+      },
+      axis: {
+        x: {
+          //type: 'timeseries'
+        }
+      },
+      grid: {
+        y: { show: true }
+      }
+    });
+    
+    $.each(sites, function(name, api){
+      datapoints(api, 'Whym', 30, 36, function(countData){
+      chart.load({
+        columns: [
+          [name].concat(convertCounts(countData))
+        ]
+      });
+    });
+  });
+});
+</script>
+
+<div id="chart"></div>
+
+Powered by <a href="http://c3js.org/">c3.js</a>, <a href="http://c3js.org/">d3.js</a> and <a href="https://jquery.com/">jQuery</a>.
+
+</body>
