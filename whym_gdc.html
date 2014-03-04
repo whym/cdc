@@ -44,7 +44,6 @@
       }, function(){ alert("fail!" + JSON.stringify(ret)); });
     }
     
-
     var sites = {
       commons: 'http://commons.wikimedia.org/w/api.php',
       meta: 'http://meta.wikimedia.org/w/api.php',
@@ -57,38 +56,46 @@
     };
     var chart = c3.generate({
       bindto: '#chart',
-
+      
       data: {
         x: 'date',
         x_format: '%Y-%m-%d',
         columns: [
           ['date', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
-        ]
+        ],
+        type: 'bar',
+        order: 'asc',
       },
       axis: {
         x: {
           //type: 'timeseries'
+        },
+        y: {
+          label: 'number of edits'
         }
       },
       grid: {
         y: { show: true }
       }
     });
-    
+
+    var names = [];
     $.each(sites, function(name, api){
       datapoints(api, 'Whym', 30, 36, function(countData){
-      chart.load({
-        columns: [
-          [name].concat(convertCounts(countData))
-        ]
+        chart.load({
+          columns: [
+            [name].concat(convertCounts(countData))
+          ]
+        });
+        names.push(name);
+        chart.groups([names]);
       });
     });
   });
-});
 </script>
 
 <div id="chart"></div>
 
-Powered by <a href="http://c3js.org/">c3.js</a>, <a href="http://c3js.org/">d3.js</a> and <a href="https://jquery.com/">jQuery</a>.
+<em>Powered by <a href="http://c3js.org/">C3.js</a>, <a href="http://d3js.org/">D3.js</a> and <a href="https://jquery.com/">jQuery</a>.</em>
 
 </body>
