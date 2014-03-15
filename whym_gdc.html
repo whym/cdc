@@ -8,6 +8,28 @@
 
 <script type="text/javascript">
   $(function(){
+    // var chart2 = c3.generate({
+    //   data: {
+    //     bindto: '#chart',
+    //     x: 'x',
+    //     columns: [
+    //       ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+    //       ['sample', 0, 0, 0, 0, 0, 0]
+    //     ]
+    //   },
+    //   axis : {
+    //     x : {
+    //       type : 'timeseries'
+    //     }
+    //   }
+    // });
+    // chart2.load({
+    //   columns: [
+    //     ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+    //     ['sample']
+    //   ]
+    // });
+
     function convertCounts(counts) {
       var nums = {};
       $.each(counts, function(days, value) {
@@ -20,6 +42,16 @@
         last = nums[x];
       });
       return ret.reverse();
+    }
+
+    function genDates(last, days, n) {
+      var ret = [];
+      n--;
+      while ( n >= 0 ) {
+        ret.push(new Date(last.getFullYear(), last.getMonth(), last.getDate() - days * n).toISOString().substring(0, 10));
+        n--;
+      }
+      return ret;
     }
 
     function datapoints(site, user, days, num, callback) {
@@ -44,31 +76,33 @@
       }, function(){ alert("fail!" + JSON.stringify(ret)); });
     }
     
+    var days = 7;
+    var num = 36;
     var sites = {
       commons: 'http://commons.wikimedia.org/w/api.php',
       meta: 'http://meta.wikimedia.org/w/api.php',
       wikidata: 'http://www.wikidata.org/w/api.php',
       mw: 'http://www.mediawiki.org/w/api.php',
-      // jawiki: 'http://ja.wikipedia.org/w/api.php',
-      // jawikt: 'http://ja.wiktionary.org/w/api.php',
-      // enwikt: 'http://en.wiktionary.org/w/api.php',
-      // enwiki: 'http://en.wikipedia.org/w/api.php',
+      //enwiki: 'http://en.wikipedia.org/w/api.php',
     };
+    var dates = genDates(new Date(), days, num);
+    dates.unshift('date');
+    var dummies = [];
+    $.each(sites, function(name, api){
+      dummies.push([name].concat(Array.apply(null, new Array(num)).map(Number.prototype.valueOf, 0)));
+    });
     var chart = c3.generate({
       bindto: '#chart',
       
       data: {
         x: 'date',
-        x_format: '%Y-%m-%d',
-        columns: [
-          ['date', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
-        ],
+        columns: [dates].concat(dummies),
         type: 'bar',
         order: 'asc',
       },
       axis: {
         x: {
-          //type: 'timeseries'
+          type: 'timeseries'
         },
         y: {
           label: 'number of edits'
@@ -81,9 +115,10 @@
 
     var names = [];
     $.each(sites, function(name, api){
-      datapoints(api, 'Whym', 30, 36, function(countData){
+      datapoints(api, 'Whym', days, num, function(countData){
         chart.load({
           columns: [
+            dates,
             [name].concat(convertCounts(countData))
           ]
         });
@@ -92,9 +127,11 @@
       });
     });
   });
+
 </script>
 
-<div id="chart"></div>
+<div id="chart" style="height: 90%;"></div>
+<div id="chart2" style="height: 90%;"></div>
 
 <em>Powered by <a href="http://c3js.org/">C3.js</a>, <a href="http://d3js.org/">D3.js</a> and <a href="https://jquery.com/">jQuery</a>.</em>
 
