@@ -50,13 +50,14 @@
           }
         ));
       });
-      $.when.apply($, gets).then(function() {
+      $.when.apply($, gets).done(function() {
         callback(ret);
-      }, function(){ alert("fail!" + JSON.stringify(ret)); });
+      }).fail(function(){ alert("fail!" + JSON.stringify(ret)); });
     }
-    
-    var days = 7;
-    var num = 36;
+
+    var user = 'Whym';
+    var days = 30;
+    var num = 30;
     var sites = {
       commons: 'http://commons.wikimedia.org/w/api.php',
       meta: 'http://meta.wikimedia.org/w/api.php',
@@ -95,7 +96,7 @@
 
     var names = [];
     $.each(sites, function(name, api){
-      datapoints(api, 'Whym', days, num, function(countData){
+      datapoints(api, user, days, num, function(countData){
         chart.load({
           columns: [
             dates,
