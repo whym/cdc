@@ -1,0 +1,3 @@
+==gdc global daily contributions per user on MediaWiki==
+
+See http://rawgithub.com/whym/gdc/master/whym_gdc.html for a sample.
