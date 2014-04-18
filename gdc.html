@@ -7,6 +7,10 @@
 <script src="c3.min.js" charset="utf-8"></script>
 
 <script type="text/javascript">
+  // The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
+  (function(h){h.deparam=function(i,j){var d={},k={"true":!0,"false":!1,"null":null};h.each(i.replace(/\+/g," ").split("&"),function(i,l){var m;var a=l.split("="),c=decodeURIComponent(a[0]),g=d,f=0,b=c.split("]["),e=b.length-1;/\[/.test(b[0])&&/\]$/.test(b[e])?(b[e]=b[e].replace(/\]$/,""),b=b.shift().split("[").concat(b),e=b.length-1):e=0;if(2===a.length)if(a=decodeURIComponent(a[1]),j&&(a=a&&!isNaN(a)?+a:"undefined"===a?void 0:void 0!==k[a]?k[a]:a),e)for(;f<=e;f++)c=""===b[f]?g.length:b[f],m=g[c]=
+  f<e?g[c]||(b[f+1]&&isNaN(b[f+1])?{}:[]):a,g=m;else h.isArray(d[c])?d[c].push(a):d[c]=void 0!==d[c]?[d[c],a]:a;else c&&(d[c]=j?void 0:"")});return d}})(jQuery);
+
   $(function(){
 
     function convertCounts(counts) {
@@ -55,9 +59,10 @@
       }).fail(function(){ alert("fail!" + JSON.stringify(ret)); });
     }
 
-    var user = 'Whym';
-    var days = 30;
-    var num = 30;
+    var params = $.deparam(location.search.substr(1));
+    var user = params['user'];
+    var days = params['days'] || 30;
+    var num = params['n'] || 20;
     var sites = {
       commons: 'http://commons.wikimedia.org/w/api.php',
       meta: 'http://meta.wikimedia.org/w/api.php',
@@ -65,6 +70,8 @@
       mw: 'http://www.mediawiki.org/w/api.php',
       enwiki: 'http://en.wikipedia.org/w/api.php',
       jawiki: 'http://ja.wikipedia.org/w/api.php',
+      jawikt: 'http://ja.wiktionary.org/w/api.php',
+      enwikt: 'http://en.wiktionary.org/w/api.php',
     };
     var dates = genDates(new Date(), days, num);
     dates.unshift('date');
