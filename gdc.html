@@ -61,8 +61,8 @@
 
     var params = $.deparam(location.search.substr(1));
     var user = params['user'];
-    var days = params['days'] || 30;
-    var num = params['n'] || 20;
+    var days = parseInt(params['days']) || 30;
+    var num  = parseInt(params['n'])    || 20;
     var sites = {
       commons: 'http://commons.wikimedia.org/w/api.php',
       meta: 'http://meta.wikimedia.org/w/api.php',
