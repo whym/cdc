@@ -1,3 +1,14 @@
-==gdc global daily contributions per user on MediaWiki==
+==gdc: global daily contributions per user on MediaWiki==
 
-See http://rawgithub.com/whym/gdc/master/whym_gdc.html for a sample.
+See http://rawgithub.com/whym/gdc/master/gdc.html?user=whym for a sample.
+
+===Todo===
+
+* Add checkboxes for projects to select (and dynamically update the chart when changed).
+* Add text fields for days and numbers of spans (and dynamically update the chart when changed).
+
+===Powered by===
+
+* [http://c3js.org C3.js]
+* [http://d3js.org D3.js]
+* [https://jquery.com jQuery]
