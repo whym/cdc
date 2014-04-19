@@ -50,7 +50,9 @@
         gets.push($.getJSON(
           site + '?format=json&action=userdailycontribs&user='+ user +'&daysago='+ d +'&callback=?',
           function(data, textStatus, jqXHR) {
-            ret[d] = [data, textStatus, jqXHR];
+            if ( data.userdailycontribs.id != 0 ) {
+              ret[d] = [data, textStatus, jqXHR];
+            }
           }
         ));
       });
