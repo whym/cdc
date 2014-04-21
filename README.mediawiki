@@ -1,14 +1,18 @@
-==gdc: global daily contributions per user on MediaWiki==
+==gdc: global daily contributions==
+
+This is a client-side visualization tool of a user's edit counts across multiple MediaWiki wikis.
 
 See http://rawgithub.com/whym/gdc/master/gdc.html?user=whym for a sample.
 
-===Todo===
-
-* Add checkboxes for projects to select (and dynamically update the chart when changed).
-* Add text fields for days and numbers of spans (and dynamically update the chart when changed).
-
 ===Powered by===
 
-* [http://c3js.org C3.js]
-* [http://d3js.org D3.js]
-* [https://jquery.com jQuery]
+* [http://c3js.org C3.js] (under [https://github.com/masayuki0812/c3/blob/master/LICENSE the MIT license])
+* [http://d3js.org D3.js] (under [https://github.com/mbostock/d3/blob/master/LICENSE the 3-clause BSD license])
+* [https://jquery.com jQuery] (under [https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt the MIT license])
+
+===Todo===
+
+* Use "usercontribs" if the total edit count on a wiki is less than 500, otherwise use "userdailycontribs".
+** Example of a "usercontribs" query: http://www.mediawiki.org/w/api.php?action=query&list=usercontribs&ucuser=Whym&ucprop=timestamp&uclimit=500
+* Add checkboxes for projects to select (and dynamically update the chart when changed).
+* Add text fields for days and numbers of spans (and dynamically update the chart when changed).
