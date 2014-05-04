@@ -1,6 +1,6 @@
 ==gdc: global daily contributions==
 
-This is a client-side visualization tool of a user's edit counts across multiple MediaWiki wikis.
+This is a client-side tool to visualize a user's edit counts across multiple MediaWiki wikis.
 
 See http://rawgithub.com/whym/gdc/master/gdc.html?user=whym for a sample.
 
