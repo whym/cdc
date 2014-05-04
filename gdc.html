@@ -47,9 +47,17 @@
         qs.push(s);
       }
       qs.forEach(function(d){
-        gets.push($.getJSON(
-          site + '?format=json&action=userdailycontribs&user='+ user +'&daysago='+ d +'&callback=?',
-          function(data, textStatus, jqXHR) {
+        gets.push($.ajax({
+            url: site,
+            data: {
+              format: 'json',
+              action: 'userdailycontribs',
+              user: user,
+              daysago: d
+            },
+            dataType: 'jsonp',
+            cache: true
+          }).done(function(data, textStatus, jqXHR) {
             if ( data.userdailycontribs.id != 0 ) {
               ret[d] = [data, textStatus, jqXHR];
             }
