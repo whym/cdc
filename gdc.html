@@ -69,8 +69,55 @@
       }).fail(function(){ alert("fail!" + JSON.stringify(ret)); });
     }
 
+    function draw(user, days, num, sites) {
+      var dates = genDates(new Date(), days, num);
+      dates.unshift('date');
+      var dummies = [];
+      $.each(sites, function(name, api){
+        dummies.push([name].concat(Array.apply(null, new Array(num)).map(Number.prototype.valueOf, 0)));
+      });
+      var chart = c3.generate({
+        bindto: '#chart',
+        
+        data: {
+          x: 'date',
+          x_format : '%Y-%m-%d',
+          columns: [dates].concat(dummies),
+          type: 'bar',
+          order: 'asc',
+        },
+        axis: {
+          x: {
+            type: 'timeseries'
+          },
+          y: {
+            label: 'number of edits'
+          }
+        },
+        grid: {
+          y: { show: true }
+        }
+      });
+
+      var names = [];
+      $.each(sites, function(name, api){
+        datapoints(api, user, days, num, function(countData){
+          chart.load({
+            columns: [
+              dates,
+              [name].concat(convertCounts(countData))
+            ]
+          });
+          names.push(name);
+          chart.groups([names]);
+        });
+      });
+      $('#title .username').text(user);
+      $('#title .days').text(days);
+    }
+
     var params = $.deparam(location.search.substr(1));
-    var user = params['user'];
+    var user = params['user'] || prompt('Username?');
     var days = parseInt(params['days']) || 30;
     var num  = parseInt(params['n'])    || 20;
     var sites = {
@@ -84,56 +131,15 @@
       enwikt: 'http://en.wiktionary.org/w/api.php',
       translatewiki: 'http://translatewiki.net/w/api.php',
     };
-    var dates = genDates(new Date(), days, num);
-    dates.unshift('date');
-    var dummies = [];
-    $.each(sites, function(name, api){
-      dummies.push([name].concat(Array.apply(null, new Array(num)).map(Number.prototype.valueOf, 0)));
-    });
-    var chart = c3.generate({
-      bindto: '#chart',
-      
-      data: {
-        x: 'date',
-        x_format : '%Y-%m-%d',
-        columns: [dates].concat(dummies),
-        type: 'bar',
-        order: 'asc',
-      },
-      axis: {
-        x: {
-          type: 'timeseries'
-        },
-        y: {
-          label: 'number of edits'
-        }
-      },
-      grid: {
-        y: { show: true }
-      }
-    });
-
-    var names = [];
-    $.each(sites, function(name, api){
-      datapoints(api, user, days, num, function(countData){
-        chart.load({
-          columns: [
-            dates,
-            [name].concat(convertCounts(countData))
-          ]
-        });
-        names.push(name);
-        chart.groups([names]);
-      });
-    });
+    draw(user, days, num, sites);
   });
 
 </script>
 
+<h1 id="title"><span class="username">?</span>'s edit counts in every <span class="days">?</span> days</h1>
 <div id="chart" style="height: 90%;"></div>
 
 <p>
-
 <a href="https://github.com/whym/gdc"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 <em>Powered by <a href="http://c3js.org/">C3.js</a>, <a href="http://d3js.org/">D3.js</a> and <a href="https://jquery.com/">jQuery</a>.</em>
 <em>This chart is released under <a href="http://creativecommons.org/publicdomain/zero/1.0">CC0</a>.</em>
