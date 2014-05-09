@@ -1,13 +1,13 @@
 __NOTOC__
-==gdc: global daily contributions==
+==cdc: interwiki daily contributions==
 
 This is a client-side tool to visualize a user's edit counts across multiple MediaWiki wikis.
 
-See http://rawgithub.com/whym/gdc/master/gdc.html?user=whym for a sample.
+See http://rawgithub.com/whym/cdc/master/cdc.html?user=whym for a sample.
 
 ===How to use===
-# Clone this repository (<code>git clone https://github.com/whym/gdc.git</code>), or [https://github.com/whym/gdc/archive/master.zip download the zip] and extract it into a directory.
-# Open <code>gdc.html</code> using a web browser.
+# Clone this repository (<code>git clone https://github.com/whym/cdc.git</code>), or [https://github.com/whym/cdc/archive/master.zip download the zip] and extract it into a directory.
+# Open <code>cdc.html</code> using a web browser.
 
 ===Powered by===
 
