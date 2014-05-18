@@ -13,6 +13,14 @@
           user-select: none;
 }
 
+.c3-legend-item-tile,
+.c3-xgrid-focus,
+.c3-ygrid,
+.c3-event-rect,
+.c3-bars path {
+  shape-rendering: crispEdges;
+}
+
 .c3-chart-arc path {
   stroke: #fff;
 
@@ -114,9 +122,6 @@
 
 .c3-legend-item {
   font-size: 12px;
-}
-.c3-legend-item-hidden {
-  opacity: 0.1;
 }
 
 /*-- Tooltip --*/
