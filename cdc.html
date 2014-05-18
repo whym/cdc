@@ -73,7 +73,7 @@
       }).fail(function(){ alert("fail!" + JSON.stringify(ret)); });
     }
 
-    function draw(user, days, num, sites, chart) {
+    function draw(user, days, num, sites, chart_path) {
       var dates = genDates(new Date(), days, num);
       dates.unshift('date');
       var dummies = [];
@@ -81,7 +81,7 @@
         dummies.push([name].concat(Array.apply(null, new Array(num)).map(Number.prototype.valueOf, 0)));
       });
       var chart = c3.generate({
-        bindto: chart,
+        bindto: chart_path,
         
         data: {
           x: 'date',
@@ -115,7 +115,7 @@
               names.push(name);
               chart.groups([names]);
               window.setTimeout(function(){
-                $('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart)).clone())).html()) + '" download="chart.svg">Save<a>');
+                $('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
               }, 1000);
             } 
           });
