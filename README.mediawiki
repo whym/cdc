@@ -1,5 +1,5 @@
 __NOTOC__
-==cdc: interwiki daily contributions==
+==cdc: crosswiki daily contributions==
 
 This is a client-side tool to visualize a user's edit counts across multiple MediaWiki wikis.
 
