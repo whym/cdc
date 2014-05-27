@@ -1,17 +1,17 @@
 require.config({
-    baseUrl: '/scripts',
-    paths: {
+	baseUrl: '/scripts',
+	paths: {
 		jquery: 'https://code.jquery.com/jquery-1.9.1.min',
 		d3: 'http://d3js.org/d3.v3.min',
 		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.1.42/c3.min',
-    }
+	}
 });
 
 require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
 	(function(h){h.deparam=function(i,j){var d={},k={"true":!0,"false":!1,"null":null};h.each(i.replace(/\+/g," ").split("&"),function(i,l){var m;var a=l.split("="),c=decodeURIComponent(a[0]),g=d,f=0,b=c.split("]["),e=b.length-1;/\[/.test(b[0])&&/\]$/.test(b[e])?(b[e]=b[e].replace(/\]$/,""),b=b.shift().split("[").concat(b),e=b.length-1):e=0;if(2===a.length)if(a=decodeURIComponent(a[1]),j&&(a=a&&!isNaN(a)?+a:"undefined"===a?void 0:void 0!==k[a]?k[a]:a),e)for(;f<=e;f++)c=""===b[f]?g.length:b[f],m=g[c]=f<e?g[c]||(b[f+1]&&isNaN(b[f+1])?{}:[]):a,g=m;else h.isArray(d[c])?d[c].push(a):d[c]=void 0!==d[c]?[d[c],a]:a;else c&&(d[c]=j?void 0:"")});return d}})(jQuery);
 	
-    function convertCounts(counts) {
+	function convertCounts(counts) {
 		var nums = {};
 		$.each(counts, function(days, value) {
 			nums[days] = value[0].userdailycontribs.timeFrameEdits;
@@ -23,9 +23,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			last = nums[x];
 		});
 		return ret.reverse();
-    }
+	}
 	
-    function genDates(last, days, n) {
+	function genDates(last, days, n) {
 		var ret = [];
 		n--;
 		while ( n >= 0 ) {
@@ -33,9 +33,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			n--;
 		}
 		return ret;
-    }
+	}
 	
-    function datapoints(site, user, days, num, ret) {
+	function datapoints(site, user, days, num, ret) {
 		var s = 0;
 		var gets = [];
 		var qs = [];
@@ -61,9 +61,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			}));
 		});
 		return $.when.apply($, gets);
-    }
+	}
 	
-    function draw(user, days, num, sites, chart_path) {
+	function draw(user, days, num, sites, chart_path) {
 		var dates = genDates(new Date(), days, num);
 		dates.unshift('date');
 		var dummies = [];
@@ -118,14 +118,14 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 				}
 			}).fail(function(){ alert("fail!" + JSON.stringify(counts)); });;
 		});
-    }
+	}
 
 
-    var params = $.deparam(location.search.substr(1));
-    var user = params['user'] || prompt('Username?');
-    var days = parseInt(params['days']) || 30;
-    var num  = parseInt(params['n'])    || 20;
-    var sites = {
+	var params = $.deparam(location.search.substr(1));
+	var user = params['user'] || prompt('Username?');
+	var days = parseInt(params['days']) || 30;
+	var num  = parseInt(params['n'])	|| 20;
+	var sites = {
 		commons: 'http://commons.wikimedia.org/w/api.php',
 		meta: 'http://meta.wikimedia.org/w/api.php',
 		wikidata: 'http://www.wikidata.org/w/api.php',
@@ -135,7 +135,7 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		jawiki: 'http://ja.wikipedia.org/w/api.php',
 		jawikt: 'http://ja.wiktionary.org/w/api.php',
 		translatewiki: 'http://translatewiki.net/w/api.php',
-    };
+	};
 
-    draw(user, days, num, sites, '#chart');
+	draw(user, days, num, sites, '#chart');
 });
