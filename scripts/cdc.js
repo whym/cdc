@@ -35,8 +35,7 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		return ret;
     }
 	
-    function datapoints(site, user, days, num, callback) {
-		var ret = {};
+    function datapoints(site, user, days, num, ret) {
 		var s = 0;
 		var gets = [];
 		var qs = [];
@@ -59,12 +58,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 				if ( data.userdailycontribs.id != 0 ) {
 					ret[d] = [data, textStatus, jqXHR];
 				}
-			}
-				   ));
+			}));
 		});
-		$.when.apply($, gets).done(function() {
-			callback(ret);
-		}).fail(function(){ alert("fail!" + JSON.stringify(ret)); });
+		return $.when.apply($, gets);
     }
 	
     function draw(user, days, num, sites, chart_path) {
@@ -97,27 +93,31 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			}
 		});
 
+
+		$('#title .username').text(user);
+		$('#title .days').text(days);
+
 		var names = [];
+		var n = 0;
 		$.each(sites, function(name, api){
-			datapoints(api, user, days, num, function(countData){
+			var counts = {};
+			datapoints(api, user, days, num, counts).done(function(){
 				chart.load({
 					columns: [
 						dates,
-						[name].concat(convertCounts(countData))
+						[name].concat(convertCounts(counts))
 					],
-					done: function(){
-						names.push(name);
-						chart.groups([names]);
-						window.setTimeout(function(){
-							$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
-						}, 1000);
-					} 
 				});
-			});
+				names.push(name);
+				chart.groups([names]);
+
+				n = n + 1;
+				if ( n == Object.keys(sites).length ) {
+					$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
+					document.title = $('#title').text();
+				}
+			}).fail(function(){ alert("fail!" + JSON.stringify(counts)); });;
 		});
-		$('#title .username').text(user);
-		$('#title .days').text(days);
-		document.title = $('#title').text();
     }
 
 
@@ -131,9 +131,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		wikidata: 'http://www.wikidata.org/w/api.php',
 		mw: 'http://www.mediawiki.org/w/api.php',
 		enwiki: 'http://en.wikipedia.org/w/api.php',
+		enwikt: 'http://en.wiktionary.org/w/api.php',
 		jawiki: 'http://ja.wikipedia.org/w/api.php',
 		jawikt: 'http://ja.wiktionary.org/w/api.php',
-		enwikt: 'http://en.wiktionary.org/w/api.php',
 		translatewiki: 'http://translatewiki.net/w/api.php',
     };
 
