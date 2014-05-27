@@ -3,7 +3,7 @@ require.config({
     paths: {
 		jquery: 'https://code.jquery.com/jquery-1.9.1.min',
 		d3: 'http://d3js.org/d3.v3.min',
-		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.1.42/c3',
+		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.1.42/c3.min',
     }
 });
 
