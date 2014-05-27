@@ -14,10 +14,11 @@ See http://rawgithub.com/whym/cdc/master/cdc.html?user=whym for a sample.
 * [http://c3js.org C3.js] (under [https://github.com/masayuki0812/c3/blob/master/LICENSE the MIT license])
 * [http://d3js.org D3.js] (under [https://github.com/mbostock/d3/blob/master/LICENSE the 3-clause BSD license])
 * [https://jquery.com jQuery] (under [https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt the MIT license])
+* [http://requirejs.org RequireJS] (under [https://github.com/jrburke/requirejs/blob/master/LICENSE the 3-clause BSD license or the MIT license])
 
 ===License===
 
-This software is licensed under [http://www.gnu.org/licenses/gpl-2.0.html GNU Public License 2.0].  Dependency libraries are included for convenience but not relicensed; see above for their licenses.
+This software is licensed under [http://www.gnu.org/licenses/gpl-2.0.html GNU Public License 2.0].  See [[#Powered by]] for licenses of dependency libraries.
 
 ===Todo===
 
