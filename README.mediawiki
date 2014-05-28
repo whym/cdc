@@ -6,9 +6,10 @@ This is a client-side tool to visualize a user's edit counts across multiple Med
 See http://rawgit.com/whym/cdc/master/cdc.html?user=whym for a sample.
 
 ===How to use===
+
 # Clone this repository (<code>git clone https://github.com/whym/cdc.git</code>), or [https://github.com/whym/cdc/archive/master.zip download the zip] and extract it into a directory.
 # Open <code>cdc.html</code> using a web browser.
-#* Note: <code>cdc.html</code> loads external scripts and stylesheets online.  If you care about traffic or privacy, consider hosting them locally and modifying your copies of <code>cdc.html</code> and <code>cdc.js</code> appropriately.
+#* Cross-domain resources warning: <code>cdc.html</code> loads external scripts and stylesheets online.  If you care about traffic/security/privacy, consider hosting them locally and modifying your copies of <code>cdc.html</code> and <code>cdc.js</code> appropriately.
 
 ===License===
 
