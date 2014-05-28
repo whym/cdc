@@ -113,7 +113,9 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 
 				n = n + 1;
 				if ( n == Object.keys(sites).length ) {
-					$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
+					window.setTimeout(function(){
+						$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
+					}, 500);
 					document.title = $('#title').text();
 				}
 			}).fail(function(){ alert("fail!" + JSON.stringify(counts)); });;
