@@ -1,3 +1,6 @@
+// Load dependencies:
+// The below is for demonstration, not intended for production use.
+// Host the files below locally or use a CDN as needed.
 require.config({
 	baseUrl: '/scripts',
 	paths: {
@@ -6,6 +9,13 @@ require.config({
 		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.1.42/c3.min',
 	}
 });
+(function(url){
+    var link = document.createElement('link');
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.getElementsByTagName('head')[0].appendChild(link);
+})('https://rawgit.com/masayuki0812/c3/0.1.42/c3.css');
 
 require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
