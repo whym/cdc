@@ -92,7 +92,10 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			},
 			axis: {
 				x: {
-					type: 'timeseries'
+					type: 'timeseries',
+					tick: {
+						format: '%Y-%m-%d'
+					}
 				},
 				y: {
 					label: 'number of edits'
