@@ -6,7 +6,7 @@ require.config({
 	paths: {
 		jquery: 'https://code.jquery.com/jquery-1.9.1.min',
 		d3: 'http://d3js.org/d3.v3.min',
-		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.2.3/c3.min',
+		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.1.24/c3.min',
 	}
 });
 (function(url){
@@ -15,7 +15,7 @@ require.config({
     link.rel = 'stylesheet';
     link.href = url;
     document.getElementsByTagName('head')[0].appendChild(link);
-})('https://rawgit.com/masayuki0812/c3/0.2.3/c3.css');
+})('https://rawgit.com/masayuki0812/c3/0.1.24/c3.css');
 
 require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
@@ -110,7 +110,7 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		$('#title .username').text(user);
 		$('#title .days').text(days);
 
-		var names = [];
+		chart.groups([Object.keys(sites)]);
 		var n = 0;
 		$.each(sites, function(name, api){
 			var counts = {};
@@ -120,17 +120,17 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 						dates,
 						[name].concat(convertCounts(counts))
 					],
+					done: function() {
+						n = n + 1;
+						// if it's the last, show the "save" link
+						if ( n == Object.keys(sites).length ) {
+							window.setTimeout(function(){ // stacked view seems to take some more time after'done', so use timeout in 500 msecs
+								$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
+							}, 500);
+							document.title = $('#title').text();
+						}
+					}
 				});
-				names.push(name);
-				chart.groups([names]);
-
-				n = n + 1;
-				if ( n == Object.keys(sites).length ) {
-					window.setTimeout(function(){
-						$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
-					}, 500);
-					document.title = $('#title').text();
-				}
 			}).fail(function(){ alert("fail!" + JSON.stringify(counts)); });;
 		});
 	}
