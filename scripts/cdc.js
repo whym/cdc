@@ -18,59 +18,44 @@ require.config({
 })('https://rawgit.com/masayuki0812/c3/0.2.4/c3.css');
 
 require(['jquery', 'd3', 'c3'], function($, d3, c3) {
-	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
+	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/8e0064b/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
 	(function(h){h.deparam=function(i,j){var d={},k={"true":!0,"false":!1,"null":null};h.each(i.replace(/\+/g," ").split("&"),function(i,l){var m;var a=l.split("="),c=decodeURIComponent(a[0]),g=d,f=0,b=c.split("]["),e=b.length-1;/\[/.test(b[0])&&/\]$/.test(b[e])?(b[e]=b[e].replace(/\]$/,""),b=b.shift().split("[").concat(b),e=b.length-1):e=0;if(2===a.length)if(a=decodeURIComponent(a[1]),j&&(a=a&&!isNaN(a)?+a:"undefined"===a?void 0:void 0!==k[a]?k[a]:a),e)for(;f<=e;f++)c=""===b[f]?g.length:b[f],m=g[c]=f<e?g[c]||(b[f+1]&&isNaN(b[f+1])?{}:[]):a,g=m;else h.isArray(d[c])?d[c].push(a):d[c]=void 0!==d[c]?[d[c],a]:a;else c&&(d[c]=j?void 0:"")});return d}})(jQuery);
 	
 	function convertCounts(counts) {
 		var nums = {};
-		$.each(counts, function(days, value) {
-			nums[days] = value[0].userdailycontribs.timeFrameEdits;
+		$.each(counts, function(d, value) {
+			nums[d] = value[0].userdailycontribs.timeFrameEdits;
 		});
 		var ret = [];
-		var last = 0;
-		Object.keys(nums).sort(function(a,b){return a-b}).forEach(function(x){
-			ret.push(nums[x] - last);
-			last = nums[x];
+		Object.keys(nums).sort().forEach(function(x){
+			ret.push(nums[x]);
 		});
-		return ret.reverse();
+		return ret;
 	}
 	
-	function genDates(last, days, n) {
+	function genDates(base, days, n) {
 		var ret = [];
 		n--;
 		while ( n >= 0 ) {
-			ret.push(new Date(last.getFullYear(), last.getMonth(), last.getDate() - days * n).toISOString().substring(0, 10));
+			ret.push(new Date(base.getFullYear(), base.getMonth(), base.getUTCDate() - days * n + 1).toISOString().substring(0, 10));
 			n--;
 		}
 		return ret;
 	}
 	
-	function datapoints(site, user, days, num, ret) {
-		var s = 0;
-		var gets = [];
-		var qs = [];
-		while ( s < days * num ) {
-			s += days;
-			qs.push(s);
-		}
-		qs.forEach(function(d){
-			gets.push($.ajax({
-				url: site,
-				data: {
-					format: 'json',
-					action: 'userdailycontribs',
-					user: user,
-					daysago: d
-				},
-				dataType: 'jsonp',
-				cache: true
-			}).done(function(data, textStatus, jqXHR) {
-				if ( data.userdailycontribs.id != 0 ) {
-					ret[d] = [data, textStatus, jqXHR];
-				}
-			}));
+	function queryCount(site, user, days, date) {
+		return $.ajax({
+			url: site,
+			data: {
+				format: 'json',
+				action: 'userdailycontribs',
+				user: user,
+				daysago: days - 1,
+				basetimestamp: date + '000000'
+			},
+			dataType: 'jsonp',
+			cache: true
 		});
-		return $.when.apply($, gets);
 	}
 	
 	function draw(user, days, num, sites, chart_path) {
@@ -114,24 +99,32 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		var n = 0;
 		$.each(sites, function(name, api){
 			var counts = {};
-			datapoints(api, user, days, num, counts).done(function(){
-				chart.load({
-					columns: [
-						dates,
-						[name].concat(convertCounts(counts))
-					],
-					done: function() {
-						n = n + 1;
-						// if it's the last, show the "save" link
-						if ( n == Object.keys(sites).length ) {
-							window.setTimeout(function(){ // stacked view seems to take some more time after'done', so use timeout in 500 msecs
-								$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
-							}, 500);
-							document.title = $('#title').text();
-						}
+			dates.slice(1).forEach(function(date){
+				queryCount(api, user, days, date.replace(/\-/g, '')).done(function(data, textStatus, jqXHR){
+					counts[date] = [data, textStatus, jqXHR];
+					if ( data.userdailycontribs.id == 0 ) {
+						return;
 					}
-				});
-			}).fail(function(){ alert("fail!" + JSON.stringify(counts)); });;
+					if ( Object.keys(counts).length == Object(dates).length - 1 ) {
+						chart.load({
+							columns: [
+								dates,
+								[name].concat(convertCounts(counts))
+							],
+							done: function() {
+								n++;
+								// if it's the last, show the "save" link
+								if ( n == Object.keys(sites).length ) {
+									window.setTimeout(function(){ // stacked view seems to take some more time after'done' on Firefox, so use timeout in 500 msecs
+										$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
+										document.title = $('#title').text();
+									}, 1500);
+								}
+							}
+						});
+					}
+				}).fail(function(jqXHR, textStatus, error){ alert("fail! " + JSON.stringify()); });;;
+			});
 		});
 	}
 
