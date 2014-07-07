@@ -4,7 +4,7 @@
 require.config({
 	baseUrl: '/scripts',
 	paths: {
-		jquery: 'https://code.jquery.com/jquery-1.11.1.min',
+		jquery: 'https://code.jquery.com/jquery-2.1.1.min',
 		d3: 'https://raw.githubusercontent.com/mbostock/d3/v3.4.8/d3.min',
 		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.2.4/c3.min',
 	}
