@@ -43,16 +43,19 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		return ret;
 	}
 	
-	function queryCount(site, user, days, date) {
+	function queryDailyCount(site, user, days, date) {
+		var data = {
+			format: 'json',
+			action: 'userdailycontribs',
+			user: user,
+			daysago: days - 1,
+		};
+		if ( date ) {
+			data['basetimestamp'] = date + '000000';
+		}
 		return $.ajax({
 			url: site,
-			data: {
-				format: 'json',
-				action: 'userdailycontribs',
-				user: user,
-				daysago: days - 1,
-				basetimestamp: date + '000000'
-			},
+			data: data,
 			dataType: 'jsonp',
 			cache: true
 		});
@@ -99,35 +102,39 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		var n = 0;
 		$.each(sites, function(name, api){
 			var counts = {};
-			dates.slice(1).forEach(function(date){
-				queryCount(api, user, days, date.replace(/\-/g, '')).done(function(data, textStatus, jqXHR){
-					counts[date] = [data, textStatus, jqXHR];
-					if ( data.userdailycontribs.id == 0 ) {
-						return;
-					}
-					if ( Object.keys(counts).length == Object(dates).length - 1 ) {
-						chart.load({
-							columns: [
-								dates,
-								[name].concat(convertCounts(counts))
-							],
-							done: function() {
-								n++;
-								// if it's the last, show the "save" link
-								if ( n == Object.keys(sites).length ) {
-									window.setTimeout(function(){ // stacked view seems to take some more time after'done' on Firefox, so use timeout in 500 msecs
-										$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save<a>');
-										document.title = $('#title').text();
-									}, 1500);
+			queryDailyCount(api, user, days * num).done(function(data, textStatus, jqXHR){
+				if ( data.userdailycontribs.id == 0 || data.userdailycontribs.timeFrameEdits == 0 ) {
+					return;
+				}
+				dates.slice(1).forEach(function(date){
+					queryDailyCount(api, user, days, date.replace(/\-/g, '')).done(function(data, textStatus, jqXHR){
+						counts[date] = [data, textStatus, jqXHR];
+						if ( data.userdailycontribs.id == 0 ) {
+							return;
+						}
+						if ( Object.keys(counts).length == Object(dates).length - 1 ) {
+							chart.load({
+								columns: [
+									dates,
+									[name].concat(convertCounts(counts))
+								],
+								done: function() {
+									n++;
+									// if it's the last, show the "save" link
+									if ( n == Object.keys(sites).length ) {
+										window.setTimeout(function(){ // stacked view seems to take some more time after'done' on Firefox, so use timeout in 500 msecs
+											$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save as SVG<a>');
+											document.title = $('#title').text();
+										}, 1500);
+									}
 								}
-							}
-						});
-					}
-				}).fail(function(jqXHR, textStatus, error){ alert("fail! " + JSON.stringify()); });;;
+							});
+						}
+					}).fail(function(jqXHR, textStatus, error){ alert("fail! " + JSON.stringify()); });
+				});
 			});
 		});
 	}
-
 
 	var params = $.deparam(location.search.substr(1));
 	var user = params['user'] || prompt('Username?');
