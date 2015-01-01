@@ -4,9 +4,9 @@
 require.config({
 	baseUrl: '/scripts',
 	paths: {
-		jquery: 'https://code.jquery.com/jquery-2.1.1.min',
-		d3: 'https://raw.githubusercontent.com/mbostock/d3/v3.4.8/d3.min',
-		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.2.4/c3.min',
+		jquery: 'https://code.jquery.com/jquery-2.1.3.min',
+		d3: 'https://raw.githubusercontent.com/mbostock/d3/v3.5.2/d3.min',
+		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.4.8/c3.min',
 	}
 });
 (function(url){
@@ -15,7 +15,7 @@ require.config({
     link.rel = 'stylesheet';
     link.href = url;
     document.getElementsByTagName('head')[0].appendChild(link);
-})('https://rawgit.com/masayuki0812/c3/0.2.4/c3.css');
+})('https://rawgit.com/masayuki0812/c3/0.4.8/c3.css');
 
 require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 	// The function below is derived from <https://github.com/cowboy/jquery-bbq/blob/8e0064b/jquery.ba-bbq.js#L444>, reused under GPL. Copyright (c) 2010 "Cowboy" Ben Alman.
