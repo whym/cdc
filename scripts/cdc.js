@@ -147,6 +147,8 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		mw: 'http://www.mediawiki.org/w/api.php',
 		enwiki: 'http://en.wikipedia.org/w/api.php',
 		enwikt: 'http://en.wiktionary.org/w/api.php',
+		enwikivoyage: 'http://en.wikivoyage.org/w/api.php',
+		enwikibooks: 'http://en.wikibooks.org/w/api.php',
 		jawiki: 'http://ja.wikipedia.org/w/api.php',
 		jawikt: 'http://ja.wiktionary.org/w/api.php',
 		translatewiki: 'http://translatewiki.net/w/api.php',
