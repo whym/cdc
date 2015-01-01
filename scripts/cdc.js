@@ -77,6 +77,12 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 				columns: [dates].concat(dummies),
 				type: 'bar',
 				order: 'asc',
+
+		onclick: function (d, i) {
+			var baseurl = sites[d.name].replace('api.php', 'index.php');
+			var timestamp = d.x.toISOString().replace(/[\-:T]/g, '');
+			window.open(baseurl + '?title=Special:Contributions&target=' + user + '&offset=' + timestamp + '&limit=' + d.value);
+        },
 			},
 			axis: {
 				x: {
