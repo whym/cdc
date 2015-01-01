@@ -104,6 +104,7 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			var counts = {};
 			queryDailyCount(api, user, days * num).done(function(data, textStatus, jqXHR){
 				if ( data.userdailycontribs.id == 0 || data.userdailycontribs.timeFrameEdits == 0 ) {
+					n++;
 					return;
 				}
 				dates.slice(1).forEach(function(date){
