@@ -2,9 +2,12 @@
 <html lang="en">
 <meta charset="utf-8">
 <style type="text/css">
-#title { font: bold normal 120% sans-serif; margin: .8em 0 -.2em 0; background-color: white; text-align: center; }
-#chart { height: 88%;}
-#savelink { float: right; }
+#title { font: bold normal 130%/250% sans-serif; margin: .8em 0 -.2em 0; background-color: white; text-align: center; }
+#footer { display: flex; flex-direction: row; justify-content: space-between; margin: 1em; }
+html, body {height: 100%; margin: 0;}
+body { display: flex; flex-direction: column; }
+#chart { flex-grow: .99; margin: 1em 1.5em 0 0; }
+#savelink { text-align: right;}
 </style>
 <body>
 <script data-main="scripts/cdcMain" src="http://requirejs.org/docs/release/2.1.15/minified/require.js"></script>
@@ -12,12 +15,15 @@
 <h1 id="title"><span class="username">?</span>'s edit counts in every <span class="days">?</span> days</h1>
 <div id="chart"></div>
 
-<p>
-<div id="savelink"><a></a></div>
-<a href="https://github.com/whym/cdc"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+<div id="footer">
+<div>
 <em>Powered by <a href="http://c3js.org/">C3.js</a>, <a href="http://d3js.org/">D3.js</a>, <a href="https://jquery.com/">jQuery</a> and <a href="http://requirejs.org">RequireJS</a>.</em>
 <em>This chart is released under <a href="http://creativecommons.org/publicdomain/zero/1.0">CC0</a>.</em>
-</p>
+
+<a href="https://github.com/whym/cdc"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+</div>
+<div id="savelink"><a></a></div>
+</div>
 
 </body>
 </html>
