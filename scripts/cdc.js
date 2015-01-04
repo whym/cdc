@@ -32,12 +32,11 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 		});
 		return ret;
 	}
-	
 	function genDates(base, days, n) {
 		var ret = [];
 		n--;
 		while ( n >= 0 ) {
-			ret.push(new Date(base.getFullYear(), base.getMonth(), base.getUTCDate() - days * n + 1).toISOString().substring(0, 10));
+			ret.push(new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate() - days * n, 23, 59, 59)).toISOString().substring(0, 19));
 			n--;
 		}
 		return ret;
@@ -48,10 +47,10 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			format: 'json',
 			action: 'userdailycontribs',
 			user: user,
-			daysago: days - 1,
+			daysago: days - 1 // substract 1 for today
 		};
 		if ( date ) {
-			data['basetimestamp'] = date + '000000';
+			data['basetimestamp'] = date;
 		}
 		return $.ajax({
 			url: site,
@@ -62,7 +61,8 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 	}
 	
 	function draw(user, days, num, sites, chart_path) {
-		var dates = genDates(new Date(), days, num);
+		var d = new Date();
+		var dates = genDates(new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())), days, num);
 		dates.unshift('date');
 		var dummies = [];
 		$.each(sites, function(name, api){
@@ -73,14 +73,15 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 			
 			data: {
 				x: 'date',
-				x_format : '%Y-%m-%d',
+				localtime: false,
+				xFormat : '%Y-%m-%dT%H:%M:%S',
 				columns: [dates].concat(dummies),
 				type: 'bar',
 				order: 'asc',
 
 		onclick: function (d, i) {
 			var baseurl = sites[d.name].replace('api.php', 'index.php');
-			var timestamp = d.x.toISOString().replace(/[\-:T]/g, '');
+			var timestamp = d.x.toISOString().replace(/T.*$/, '235959').replace(/[\-:]/g, '');
 			window.open(baseurl + '?title=Special:Contributions&target=' + user + '&offset=' + timestamp + '&limit=' + d.value);
         },
 			},
@@ -114,7 +115,7 @@ require(['jquery', 'd3', 'c3'], function($, d3, c3) {
 					return;
 				}
 				dates.slice(1).forEach(function(date){
-					queryDailyCount(api, user, days, date.replace(/\-/g, '')).done(function(data, textStatus, jqXHR){
+					queryDailyCount(api, user, days, date.replace(/[\-T:]/g, '')).done(function(data, textStatus, jqXHR){
 						counts[date] = [data, textStatus, jqXHR];
 						if ( data.userdailycontribs.id == 0 ) {
 							return;
