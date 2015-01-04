@@ -1,5 +1,3 @@
-"use strict";
-
 // Load dependencies:
 // The below is for demonstration, not intended for production use.
 // Host the files below locally or use a CDN as needed.
@@ -19,6 +17,7 @@ require.config({
 })('https://rawgit.com/masayuki0812/c3/0.4.8/c3.css');
 
 define(function() {
+	"use strict";
 	var cdc = {
 		convertCounts: function(counts) {
 			var nums = {};
@@ -50,7 +49,7 @@ define(function() {
 				daysago: days - 1 // substract 1 for today
 			};
 			if ( date ) {
-				data['basetimestamp'] = date;
+				data.basetimestamp = date;
 			}
 			return $.ajax({
 				url: site,
@@ -112,14 +111,14 @@ define(function() {
 				$.each(sites, function(name, api){
 					var counts = {};
 					cdc.queryDailyCount(api, user, days * num).done(function(data, textStatus, jqXHR){
-						if ( data.userdailycontribs.id == 0 || data.userdailycontribs.timeFrameEdits == 0 ) {
+						if ( data.userdailycontribs.id === 0 || data.userdailycontribs.timeFrameEdits === 0 ) {
 							n++;
 							return;
 						}
 						dates.slice(1).forEach(function(date){
 							cdc.queryDailyCount(api, user, days, date.replace(/[\-T:]/g, '')).done(function(data, textStatus, jqXHR){
 								counts[date] = [data, textStatus, jqXHR];
-								if ( data.userdailycontribs.id == 0 ) {
+								if ( data.userdailycontribs.id === 0 ) {
 									return;
 								}
 								if ( Object.keys(counts).length == Object(dates).length - 1 ) {
