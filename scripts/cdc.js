@@ -5,7 +5,7 @@ require.config({
 	paths: {
 		jquery: 'https://code.jquery.com/jquery-2.1.3.min',
 		d3: 'https://raw.githubusercontent.com/mbostock/d3/v3.5.2/d3.min',
-		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.4.8/c3.min'
+		c3: 'https://raw.githubusercontent.com/masayuki0812/c3/0.4.9/c3.min'
 	}
 });
 (function(url){
@@ -14,7 +14,7 @@ require.config({
 	link.rel = 'stylesheet';
 	link.href = url;
 	document.getElementsByTagName('head')[0].appendChild(link);
-})('https://rawgit.com/masayuki0812/c3/0.4.8/c3.css');
+})('https://rawgit.com/masayuki0812/c3/0.4.9/c3.css');
 
 define(function() {
 	"use strict";
@@ -84,7 +84,12 @@ define(function() {
 							var baseurl = sites[d.name].replace('api.php', 'index.php');
 							var timestamp = d.x.toISOString().replace(/T.*$/, '235959').replace(/[\-:]/g, '');
 							window.open(baseurl + '?title=Special:Contributions&target=' + user + '&offset=' + timestamp + '&limit=' + d.value);
-						},
+						}
+					},
+					onrendered: function() {
+						$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save as SVG<a>');
+						document.title = $('#title').text();
+						
 					},
 					axis: {
 						x: {
@@ -107,12 +112,10 @@ define(function() {
 				$('#title .days').text(days);
 				
 				chart.groups([Object.keys(sites)]);
-				var n = 0;
 				$.each(sites, function(name, api){
 					var counts = {};
 					cdc.queryDailyCount(api, user, days * num).done(function(data, textStatus, jqXHR){
 						if ( data.userdailycontribs.id === 0 || data.userdailycontribs.timeFrameEdits === 0 ) {
-							n++;
 							return;
 						}
 						dates.slice(1).forEach(function(date){
@@ -126,17 +129,7 @@ define(function() {
 										columns: [
 											dates,
 											[name].concat(cdc.convertCounts(counts))
-										],
-										done: function() {
-											n++;
-											// if it's the last, show the "save" link
-											if ( n == Object.keys(sites).length ) {
-												window.setTimeout(function(){ // stacked view seems to take some more time after'done' on Firefox, so use timeout in 500 msecs
-													$('#savelink a').html('<a href-lang="image/svg+xml" href="data:image/svg+xml,' + encodeURIComponent(($('<div/>').append($('svg', $(chart_path)).clone())).html()) + '" download="chart.svg">Save as SVG<a>');
-													document.title = $('#title').text();
-												}, 1500);
-											}
-										}
+										]
 									});
 								}
 							}).fail(function(jqXHR, textStatus, error){ alert("fail! " + JSON.stringify()); });
